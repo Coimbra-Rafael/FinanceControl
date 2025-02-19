@@ -1,0 +1,49 @@
+﻿@page "/usuarios"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using FinanceControl.UI.Domain.Entities
+@using FinanceControl.UI.Infrastructure.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<FinanceControl.UI.Infrastructure.Data.ApplicationDbContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a class="btn btn-info btn-md" href="usuarios/create">Create New</a>
+</p>
+
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-12">
+            <div class="table table-responsive">
+                <QuickGrid Class="table table-striped table-hover" Items="context.Usuarios">
+                    <PropertyColumn Property="usuarios => usuarios.Nome" />
+                    <PropertyColumn Property="usuarios => usuarios.Email" />
+                    <PropertyColumn Property="usuarios => usuarios.CreatedAt" />
+                    <PropertyColumn Property="usuarios => usuarios.UpdatedAt" />
+
+                    <TemplateColumn Context="usuarios">
+                        <a href="@($"usuarios/edit?id={usuarios.Id}")" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="@($"usuarios/details?id={usuarios.Id}")" class="btn btn-info btn-sm">Details</a>
+                        <a href="@($"usuarios/delete?id={usuarios.Id}")" class="btn btn-danger btn-sm">Delete</a>
+                    </TemplateColumn>
+                </QuickGrid>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Inject]
+    private ApplicationDbContext context { get; set; }
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

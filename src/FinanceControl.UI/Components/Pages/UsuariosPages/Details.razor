@@ -1,0 +1,52 @@
+﻿@page "/usuarios/details"
+@using Microsoft.EntityFrameworkCore
+@using FinanceControl.UI.Domain.Entities
+@inject IDbContextFactory<FinanceControl.UI.Infrastructure.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Usuarios</h2>
+    <hr />
+    @if (usuarios is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Nome</dt>
+            <dd class="col-sm-10">@usuarios.Nome</dd>
+            <dt class="col-sm-2">Email</dt>
+            <dd class="col-sm-10">@usuarios.Email</dd>
+            <dt class="col-sm-2">CreatedAt</dt>
+            <dd class="col-sm-10">@usuarios.CreatedAt</dd>
+            <dt class="col-sm-2">UpdatedAt</dt>
+            <dd class="col-sm-10">@usuarios.UpdatedAt</dd>
+        </dl>
+        <div>
+            <a href="@($"/usuarios/edit?id={usuarios.Id}")">Edit</a> |
+            <a href="@($"/usuarios")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Usuarios? usuarios;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        usuarios = await context.Usuarios.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (usuarios is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
