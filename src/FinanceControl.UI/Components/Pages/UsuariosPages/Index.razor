@@ -6,19 +6,18 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<FinanceControl.UI.Infrastructure.Data.ApplicationDbContext> DbFactory
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Usuários</PageTitle>
 
-<h1>Index</h1>
+<h1>Cadastro Usuários</h1>
 
 <p>
-    <a class="btn btn-info btn-md" href="usuarios/create">Create New</a>
+    <a class="btn btn-info" href="usuarios/create">Create New</a>
 </p>
-
 <div class="container mt-3">
     <div class="row">
         <div class="col-12">
             <div class="table table-responsive">
-                <QuickGrid Class="table table-striped table-hover" Items="context.Usuarios">
+                <QuickGrid Class="table table-borderless table-striped " Items="context.Usuarios">
                     <PropertyColumn Property="usuarios => usuarios.Nome" />
                     <PropertyColumn Property="usuarios => usuarios.Email" />
                     <PropertyColumn Property="usuarios => usuarios.CreatedAt" />
@@ -35,10 +34,8 @@
     </div>
 </div>
 
-
 @code {
-    [Inject]
-    private ApplicationDbContext context { get; set; }
+    private ApplicationDbContext context = default!;
 
     protected override void OnInitialized()
     {
